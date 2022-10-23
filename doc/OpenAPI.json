@@ -1,0 +1,616 @@
+{
+    "swaggerDoc": {
+      "openapi": "3.0.0",
+      "info": {
+        "title": "WebAPI",
+        "version": "1.0.0",
+        "description": "Restful API"
+      },
+      "components": {
+        "securitySchemes": {
+          "jwt": {
+            "type": "http",
+            "scheme": "bearer",
+            "in": "header",
+            "bearerFormat": "JWT"
+          }
+        },
+        "schemas": {
+          "users": {
+            "type": "object",
+            "required": [
+              "username",
+              "email",
+              "password",
+              "role"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "The auto-genrated id of the user"
+              },
+              "username": {
+                "type": "string",
+                "description": "The member's account username"
+              },
+              "email": {
+                "type": "string",
+                "description": "The member's account email, using to login"
+              },
+              "password": {
+                "type": "string",
+                "description": "The member website's account password, using to login, it process the hashing"
+              },
+              "role": {
+                "type": "string",
+                "description": "The member permission access"
+              },
+              "date": {
+                "type": "date",
+                "description": "The auto-genrated user registration time"
+              }
+            },
+            "example": {
+              "id": "413992aa5behaw3sg75a16987",
+              "username": "Peter Wong",
+              "email": "peterwong@gmail.com",
+              "password": "$2b$10$o9D0qMBXxECiObrwYELTw.VD.JOalDtjfI45PUmKn9oq8TEa5W5La",
+              "role": "member",
+              "date": "2022-09-24T19:28:01.759+00:00"
+            }
+          },
+          "movies": {
+            "type": "object",
+            "required": [
+              "title",
+              "description",
+              "price"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "The auto-generated id of the movie"
+              },
+              "title": {
+                "type": "string",
+                "description": "The film title"
+              },
+              "price": {
+                "type": "string",
+                "description": "The browse price of this film"
+              },
+              "staff": {
+                "type": "object",
+                "description": "The staff id , to record which staff are post this film"
+              }
+            },
+            "example": {
+              "id": "657891aa5behaw3sg75a16987",
+              "title": "The Imitation Game",
+              "price": 200,
+              "staff": "123321ha5bewoh3sg75a32195"
+            }
+          },
+          "applications": {
+            "type": "object",
+            "required": [
+              "movie",
+              "email"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "The auto-generated id of the application"
+              },
+              "movie": {
+                "type": "string",
+                "description": "The memeber which film want to browse"
+              },
+              "email": {
+                "type": "string",
+                "description": "The member which contact email address"
+              },
+              "status": {
+                "type": "string",
+                "description": "The status of the process of this application,which including pending, accepted, rejected"
+              }
+            },
+            "example": {
+              "id": "432122oa5pepew3sg75a65211",
+              "movie": "The Imitation Game",
+              "email": "leo@gmail.com",
+              "status": "pending"
+            }
+          }
+        }
+      },
+      "servers": [
+        {
+          "url": "http://localhost:8080"
+        }
+      ],
+      "security": [
+        {
+          "jwt": []
+        }
+      ],
+      "paths": {
+        "/api/application/{_member_id}": {
+          "get": {
+            "summary": "Get the application by the member id",
+            "tags": [
+              "Applications"
+            ],
+            "parameters": [
+              {
+                "in": "path",
+                "name": "id",
+                "schema": {
+                  "type": "string"
+                },
+                "required": true,
+                "description": "The member id"
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "List member's application by id",
+                "contens": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/applications"
+                    }
+                  }
+                }
+              },
+              "500": {
+                "description": "Cannot get data"
+              }
+            }
+          }
+        },
+        "/api/application/getall": {
+          "get": {
+            "summary": "Get all the application",
+            "tags": [
+              "Applications"
+            ],
+            "responses": {
+              "200": {
+                "description": "List member's application by id",
+                "contens": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/applications"
+                    }
+                  }
+                }
+              },
+              "500": {
+                "description": "Cannot get data"
+              }
+            }
+          }
+        },
+        "/api/application/{email}": {
+          "get": {
+            "summary": "Find the application by email",
+            "tags": [
+              "Applications"
+            ],
+            "parameters": [
+              {
+                "in": "path",
+                "name": "email",
+                "schema": {
+                  "type": "string"
+                },
+                "required": true,
+                "description": "The member's application contact email"
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "List the which contact email application",
+                "contens": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/applications"
+                    }
+                  }
+                }
+              },
+              "500": {
+                "description": "Server something error"
+              }
+            }
+          },
+          "patch": {
+            "summary": "Update the application by the email",
+            "tags": [
+              "Applications"
+            ],
+            "parameters": [
+              {
+                "in": "path",
+                "name": "id",
+                "schema": {
+                  "type": "string"
+                },
+                "required": true,
+                "description": "The movie id"
+              }
+            ],
+            "requestBody": {
+              "required": true,
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/applications"
+                  }
+                }
+              }
+            },
+            "responses": {
+              "200": {
+                "description": "application updated",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/applications"
+                    }
+                  }
+                }
+              },
+              "403": {
+                "description": "Only staff permission can update the movie"
+              },
+              "404": {
+                "description": "movie not found"
+              }
+            }
+          }
+        },
+        "/api/application/upload": {
+          "post": {
+            "summary": "Create a new application form to borrow the film",
+            "tags": [
+              "Applications"
+            ],
+            "requestBody": {
+              "required": true,
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/applications"
+                  }
+                }
+              }
+            },
+            "responses": {
+              "200": {
+                "description": "The application was successfully created",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/applications"
+                    }
+                  }
+                }
+              },
+              "400": {
+                "description": "Cannot Submit"
+              }
+            }
+          }
+        },
+        "/api/application/{id}": {
+          "delete": {
+            "summary": "Remove the application by id",
+            "tags": [
+              "Applications"
+            ],
+            "parameters": [
+              {
+                "in": "path",
+                "name": "title",
+                "schema": {
+                  "type": "string"
+                },
+                "required": true,
+                "description": "The movie title"
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "The application have been deleted"
+              },
+              "404": {
+                "description": "The application have been deleted"
+              }
+            }
+          }
+        },
+        "/api/user/register": {
+          "post": {
+            "summary": "Create a new account on film website",
+            "tags": [
+              "Users"
+            ],
+            "requestBody": {
+              "required": true,
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/users"
+                  }
+                }
+              }
+            },
+            "responses": {
+              "200": {
+                "description": "The account was successfully created",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/users"
+                    }
+                  }
+                }
+              },
+              "400": {
+                "description": "Email exist , Please using the othere email"
+              }
+            }
+          }
+        },
+        "/api/user/login": {
+          "post": {
+            "summary": "login on film website",
+            "tags": [
+              "Users"
+            ],
+            "requestBody": {
+              "required": true,
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/users"
+                  }
+                }
+              }
+            },
+            "responses": {
+              "200": {
+                "description": "The account was successfully created",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/users"
+                    }
+                  }
+                }
+              },
+              "401": {
+                "description": "Invalid Password or Email"
+              }
+            }
+          }
+        },
+        "/api/movies": {
+          "get": {
+            "summary": "Returns the list of all the movies",
+            "tags": [
+              "Moives"
+            ],
+            "responses": {
+              "200": {
+                "description": "The list of the movies",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/movies"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "post": {
+            "summary": "Create a new movie",
+            "tags": [
+              "Moives"
+            ],
+            "requestBody": {
+              "required": true,
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/movies"
+                  }
+                }
+              }
+            },
+            "responses": {
+              "200": {
+                "description": "New movie has been saved",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/movies"
+                    }
+                  }
+                }
+              },
+              "400": {
+                "description": "Cannot save movie Only staff can post new movie or some error"
+              }
+            }
+          }
+        },
+        "/api/movies/findByName/{name}": {
+          "get": {
+            "summary": "Get the movie by name",
+            "tags": [
+              "Moives"
+            ],
+            "parameters": [
+              {
+                "in": "path",
+                "name": "title",
+                "schema": {
+                  "type": "string"
+                },
+                "required": true,
+                "description": "The movie title"
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "The movie description by title",
+                "contens": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/movies"
+                    }
+                  }
+                }
+              },
+              "500": {
+                "description": "The movie was not found"
+              }
+            }
+          }
+        },
+        "/api/movies/staff/{_staff_id}": {
+          "get": {
+            "summary": "Get the staff created movie by id",
+            "tags": [
+              "Moives"
+            ],
+            "parameters": [
+              {
+                "in": "path",
+                "name": "id",
+                "schema": {
+                  "type": "string"
+                },
+                "required": true,
+                "description": "The staff id"
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "The staff description by created movie",
+                "contens": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/movies"
+                    }
+                  }
+                }
+              },
+              "500": {
+                "description": "Cannot get movie data"
+              }
+            }
+          }
+        },
+        "/api/movies/{_id}": {
+          "patch": {
+            "summary": "Update the movie by the id",
+            "tags": [
+              "Moives"
+            ],
+            "parameters": [
+              {
+                "in": "path",
+                "name": "id",
+                "schema": {
+                  "type": "string"
+                },
+                "required": true,
+                "description": "The movie id"
+              }
+            ],
+            "requestBody": {
+              "required": true,
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/movies"
+                  }
+                }
+              }
+            },
+            "responses": {
+              "200": {
+                "description": "The movie was updated",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "$ref": "#/components/schemas/movies"
+                    }
+                  }
+                }
+              },
+              "403": {
+                "description": "Only staff permission can update the movie"
+              },
+              "404": {
+                "description": "Movie not found"
+              }
+            }
+          }
+        },
+        "/api/movies/deleteByName/{id}": {
+          "delete": {
+            "summary": "Remove the movie by title",
+            "tags": [
+              "Moives"
+            ],
+            "parameters": [
+              {
+                "in": "path",
+                "name": "title",
+                "schema": {
+                  "type": "string"
+                },
+                "required": true,
+                "description": "The movie title"
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "The movie was deleted"
+              },
+              "403": {
+                "description": "Only staff permission can deleted the movie"
+              },
+              "404": {
+                "description": "The movie not found , Please typing the other name"
+              }
+            }
+          }
+        }
+      },
+      "tags": [
+        {
+          "name": "Applications",
+          "description": "The movie applications API"
+        },
+        {
+          "name": "Users",
+          "description": "The users managing API"
+        },
+        {
+          "name": "Moives",
+          "description": "The movie managing API"
+        }
+      ]
+    },
+    "customOptions": {}
+  }
